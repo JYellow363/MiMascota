@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1"></meta>
+<title>Mascota</title>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<link
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+	rel="stylesheet" id="bootstrap-css"></link>
+
+<script
+	src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+
+
+</head>
+<body>
+	<!-- Los fragment se insertan ya sea con th:include o th:replace -->
+	<!-- th:include simplemente se inserta dentro del espacio asignado -->
+	<!-- th:replace remplaza todo el espacio asignado por el fragment correspondiente -->
+	<!-- sintaxis th:include/replace="rutafragment :: Nombre del fragment -->
+	<div th:replace="fragments/header :: header"></div>
+	<div class="container">
+		<!-- th:action toma la accion de un form que se ejecutara por medio de un boton-->
+		<!-- @{} Expresion de enlace -->
+		<!-- ${} Declaracion de Variable -->
+		<!-- th:object declara un objeto que sera usado por los *{} -->
+		<form th:action="@{/pet/registrar}" method="post" th:object="${pet}"
+		
+			enctype="multipart/form-data">
+			<div class="form-group">
+			<!-- *{} Setea la variable -->
+				<label for="idrace">ID:</label> <input type="text"
+					class="form-control" th:field="*{idPet}"></input>
+
+				<div class="form-group">
+					<label for="nombre">NOMBRE:</label> <input type="text"
+						th:field="*{namePet}" class="form-control" id="nombre"></input>
+						<!-- th:if Para establecer condiciones, las variables solo son booleanas -->
+						<!-- #{} Expresion de mensaje -->
+					<div class="alert alert-danger"
+						th:if="${#fields.hasErrors('namePet')}" th:errors="*{namePet}"></div>
+
+					<label for="fechaNacimiento">FECHA DE NACIMIENTO:</label> <input
+						type="date" th:field="*{birthDatePet}" class="form-control"
+						id="fechaNacimiento"></input>
+						<!-- th:errors Se encarga del manejo de errores -->
+					<div class="alert alert-danger"
+						th:if="${#fields.hasErrors('birthDatePet')}"
+						th:errors="*{birthDatePet}"></div>
+						
+					<label for="raza" class=" col-sm-2 col-form-label">Raza: </label>
+					<select
+						class="form-control" th:field="*{race.idRace}">
+						<!-- th:each Itera los elementos de un arreglo -->
+						<!-- sintaxis th:each="Variable: ${Lista}" -->
+						<!-- th:value Establece el value de la seleccion -->
+						<!-- sintaxis th:value="${Variable.Atributo}" -->
+						<option th:each="r: ${listaRazas}" th:value="${r.idRace}"
+							th:text="${r.nameRace}"
+							th:selected="(${r.idRace} == *{race.idRace})"></option>
+					</select>
+					<!--label for="dueno" class=" col-sm-2 col-form-label">Dueno: </label>
+				<select
+						class="form-control" th:field="*{dueno.idDueno}">
+						<option th:each="d: ${listaDuenos}" th:value="${d.idDueno}"
+							th:text="${d.nameDueno}"
+							th:selected="(${d.idDueno} == *{dueno.idDueno})"></option>
+					</select-->
+				</div>
+
+			</div>
+
+			<button type="submit" class="btn btn-primary">Aceptar</button>
+			<a href="/pet/listar" class="btn btn-danger">Cancelar</a>
+
+		</form>
+	</div>
+	<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>
